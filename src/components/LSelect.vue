@@ -32,6 +32,10 @@
 </template>
 <script>
 export default {
+  model: {
+    value: 'value',
+    event: 'valueChange'
+  },
   props: {
     // 传入数据
     options: {
@@ -40,7 +44,7 @@ export default {
     },
     // 父组件赋默认值
     value: {
-      type: String,
+      type: [String, Array],
       default: ''
     },
     // 提示语
@@ -68,8 +72,7 @@ export default {
       selectedOptions: [],
       // 搜索关键词
       searchQuery: '',
-      // 选中值
-      selectedValue: ''
+      comVal: ''
     }
   },
   computed: {
@@ -82,15 +85,37 @@ export default {
     value: {
       immediate: true,
       handler (newVal) {
+        this.comVal = this.multiple ? typeof newVal === 'string' ? [newVal] : newVal : newVal
         if (this.multiple) {
           this.selectedOptions = newVal ? this.options.filter(option => newVal.includes(option.text)) : []
         } else {
           this.selectedOption = newVal ? this.options.find(option => option.text === newVal) : null
         }
       }
+    },
+    comVal: {
+      deep: true,
+      handler (newVal) {
+        this.$emit('valueChange', newVal)
+      }
+    },
+    menuOpen (val) {
+      // 选项栏打开回调
+      this.$emit('menuOpen', val)
     }
   },
+  created () {
+    window.addEventListener('click', this.documentClick)
+  },
+  beforeDestroy () {
+    window.removeEventListener('click', this.documentClick)
+  },
   methods: {
+    documentClick (e) {
+      if (this.menuOpen && !this.getIsElementdOut(e.target, document.querySelector('.select'))) {
+        this.menuOpen = false
+      }
+    },
     toggleMenu () {
       this.menuOpen = !this.menuOpen
       if (this.menuOpen) {
@@ -99,14 +124,12 @@ export default {
           this.$refs.select.scrollTop = 0
         })
       }
-      // 选项栏打开回调
-      this.$emit('menuOpen', this.menuOpen)
     },
     // 选中值
     selectOption (option) {
       if (this.multiple) {
         if (this.isSelected(option)) {
-          this.selectedOptions = this.selectedOptions.filter(item => item.value !== option.value)
+          this.selectedOptions = this.selectedOptions.filter(item => item.text !== option.text)
         } else {
           this.selectedOptions = this.selectedOptions.concat(option)
         }
@@ -115,9 +138,15 @@ export default {
         this.menuOpen = false
       }
       if (this.multiple) {
-        this.$emit('change', this.selectedOptions)
+        this.comVal = this.selectedOptions.map(m => m.text)
+        this.$nextTick(() => {
+          this.$emit('change', this.selectedOptions)
+        })
       } else {
-        this.$emit('change', this.selectedOption)
+        this.comVal = this.selectedOption.text
+        this.$nextTick(() => {
+          this.$emit('change', this.selectedOption)
+        })
       }
     },
     // 删除值
@@ -126,10 +155,13 @@ export default {
       if (index !== -1) {
         this.selectedOptions.splice(index, 1)
       }
-      // 值改变回调
-      this.$emit('change', this.selectedValue)
-      // 删除值改变回调
-      this.$emit('remove', option.text)
+      this.comVal = this.selectedOptions.map(m => m.text)
+      this.$nextTick(() => {
+        // 值改变回调
+        this.$emit('change', this.selectedOptions)
+        // 删除值改变回调
+        this.$emit('remove', option.text)
+      })
     },
     // 是否已经被选中
     isSelected (option) {
@@ -138,6 +170,17 @@ export default {
     search () {
       // 返回搜索关键词回调
       this.$emit('search', this.searchQuery)
+    },
+    // 判断是否点击组件之外的元素
+    getIsElementdOut (element, box) {
+      const newElement = typeof element === 'string' ? document.querySelector(element) : element
+      const newBox = typeof elementbox === 'string' ? document.querySelector(box) : box
+      if (!newElement) return false
+      let current = newElement.parentNode
+      while (current && [current].indexOf(newBox) < 0) {
+        current = current.parentNode
+      }
+      return [current].indexOf(newBox) > -1
     }
   }
 }

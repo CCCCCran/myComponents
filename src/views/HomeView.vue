@@ -16,12 +16,12 @@ export default {
   data () {
     return {
       options: [
-        { text: '1' },
-        { text: '2' },
-        { text: '3' },
-        { text: '4' },
-        { text: '5' },
-        { text: '6' }
+        { text: '1', disabled: true },
+        { text: '2', disabled: true },
+        { text: '3', disabled: true },
+        { text: '4', disabled: false },
+        { text: '5', disabled: false },
+        { text: '6', disabled: false }
       ],
       value: '',
       getValue: null
