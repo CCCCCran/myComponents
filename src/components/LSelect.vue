@@ -1,5 +1,8 @@
 <template>
-     <div class="box">
+     <div class="box" style="display: flex;">
+     <slot name="before">
+     <span>标题：</span>
+     </slot>
       <div class="select"  ref="select">
       <div class="select_control" @click="toggleMenu">
         <div class="select_selected-value" v-if="!multiple">{{ selectedOption ? selectedOption.lable : placeholder }}
@@ -35,6 +38,9 @@
         </div>
       </div>
     </div>
+    <slot name="after">
+    <span>after</span>
+    </slot>
      </div>
 </template>
 <script>
@@ -258,7 +264,7 @@ $disabled:not-allowed;
   font-size: 14px;
   font-family: Arial, sans-serif;
   color: #333;
-  .select_control {
+    .select_control {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -268,13 +274,41 @@ $disabled:not-allowed;
   border-radius: 4px;
   cursor: $get;
   user-select: none;
+  .select_selected-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-  .select_control:hover {
-  border-color: #aaa;
+  .select_selected-value,
+  .select_selected-values {
+  flex: 1;
   }
-
-  .select_arrow {
+  .select_selected-values .select_selected-value {
+  display: inline-flex;
+  align-items: center;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  padding: 2px 6px;
+}
+  .select_selected-values {
+  display: flex;
+  flex-wrap: wrap;
+  .select_selected-placeholder {
+  color: #ccc;
+}
+}
+.select_selected-values .select_remove-option {
+  display: inline-block;
+  margin-left: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  cursor: $get;
+}
+.select_arrow {
   width: 0;
   height: 0;
   margin-left: 6px;
@@ -290,49 +324,13 @@ $disabled:not-allowed;
   border-width:  0 4px 5px 4px;
   border-color: transparent transparent #333 transparent;
   }
-
-  .select_selected-value,
-  .select_selected-values {
-  flex: 1;
-  }
-
-.select_selected-value {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  .select_control:hover {
+  border-color: #aaa;
 }
 
-.select_selected-values {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.select_selected-values .select_selected-value {
-  display: inline-flex;
-  align-items: center;
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 6px;
-  margin-bottom: 6px;
-  padding: 2px 6px;
-}
-
-.select_selected-values .select_remove-option {
-  display: inline-block;
-  margin-left: 6px;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 1;
-  cursor: $get;
-}
-
-.select_selected-values .select_remove-option:hover {
+  .select_selected-values .select_remove-option:hover {
   color: #f00;
 }
-
-.select_selected-placeholder {
-  color: #ccc;
 }
 
 .select_menu {
@@ -345,14 +343,10 @@ $disabled:not-allowed;
   overflow-y: auto;
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 5px
-}
-
-.select_search {
+  border-radius: 5px;
+  .select_search {
   padding: 5px;
-}
-
-.select_search-input {
+    .select_search-input {
   width: 220px;
   padding: 6px 10px;
   border: 1px solid #ccc;
@@ -360,8 +354,8 @@ $disabled:not-allowed;
   font-size: 14px;
   outline: none;
 }
-
-.select_options {
+  }
+  .select_options {
   display: flex;
   flex-wrap: wrap;
   .select_option_disabled {
@@ -373,8 +367,6 @@ $disabled:not-allowed;
   cursor: $disabled;
   user-select: none;
   }
-}
-
 .select_option {
   display: flex;
   align-items: center;
@@ -388,24 +380,26 @@ $disabled:not-allowed;
     }
 }
 
-.select_option:hover,
-.select_option.is-selected {
+  .select_option:hover,
+  .select_option.is-selected {
   background-color: #eee;
 }
 
-.select_option-checkbox {
+  .select_option-checkbox {
   margin-right: 6px;
 }
 
-.select_option-text {
+  .select_option-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.select_no-results {
+  .select_no-results {
   padding: 10px;
   color: #ccc;
+}
+}
 }
 }
 

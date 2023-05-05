@@ -3,6 +3,14 @@
     <LSelect :options="options" :value="value" :multiple="true" :searchable="true
       " :lable="'lable'" @valueChange="input" :replaceKey="{value: 'value', lable: 'lable', disabled: 'disabled'}"
       >
+      <!-- 组件前缀 -->
+      <template slot="before">
+     前缀
+      </template>
+       <!-- 组件后缀 -->
+       <template slot="after">
+     后缀
+      </template>
     <!-- 选项栏插槽_自定义选项栏显示数据 -->
       <template slot="option" slot-scope="{option}">
         <div class="custom-option"  style= "display:inline-block">
