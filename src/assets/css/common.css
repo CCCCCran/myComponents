@@ -1,5 +1,12 @@
+:root {
+    --boxWidth:500px;
+    --buttonBigWidth:150px;
+    --buttonDefaultWidth:75px;
+    --buttonSmallWidth:100px;
+}
+
 .box {
-    width: 500px;
+    width: var(--boxWidth);
     height:500px;
     margin: auto;
     background-color: aliceblue;

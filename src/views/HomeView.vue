@@ -84,11 +84,11 @@ export default {
   $size:'big';
 @function btnSize($size) {
   @if $size == 'big' {
-    @return (width: 150px, height: 50px);
+    @return (width: var(--buttonBigWidth), height: 50px);
   } @else if $size == 'small' {
-    @return (width: 75px, height: 25px);
+    @return (width: var(--buttonSmallWidth), height: 25px);
   } @else if $size == 'default' {
-    @return (width: 100px, height: 35px);
+    @return (width: var(--buttonDefaultWidth), height: 35px);
   }
 }
 .btn {
